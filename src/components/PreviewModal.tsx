@@ -1,17 +1,68 @@
-import React from 'react';
+import React from "react";
+import { formConfig } from "../formConfig";
 
-const PreviewModal: React.FC<{ open: boolean; onClose: () => void; values: any }> = ({ open, onClose, values }) => {
+interface PreviewModalProps {
+  open: boolean;
+  onClose: () => void;
+  values: any;
+}
+
+const PreviewModal: React.FC<PreviewModalProps> = ({ open, onClose, values }) => {
   if (!open) return null;
+
+  const getDisplayValue = (q: any) => {
+    const val = values[q.id];
+    if (q.type === "file" && val instanceof File) return val.name;
+    if (Array.isArray(val)) return val.join(", ");
+    return val || "-";
+  };
+
+  const isVisible = (q: any) => {
+    if (!q.conditional) return true;
+    const parentVal = values[q.conditional.questionId];
+    return String(parentVal) === String(q.conditional.answer);
+  };
+
   return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
-      <div className="bg-white max-w-2xl w-full p-4 rounded">
-        <h2 className="text-xl font-bold mb-2">Preview</h2>
-        <pre className="max-h-96 overflow-auto text-sm bg-gray-50 p-2 rounded">{JSON.stringify(values, null, 2)}</pre>
-        <div className="mt-3 text-right">
-          <button onClick={onClose} className="px-3 py-1 border rounded">Close</button>
-        </div>
-      </div>
+   <div className="inset-0 z-50 bg-black/40 p-4 flex justify-center items-start overflow-y-auto">
+  <div className="bg-white w-full max-w-2xl rounded shadow-lg max-h-[90vh] overflow-y-auto">
+  
+    {/* Header with Close button */}
+    <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-10">
+      <h2 className="text-2xl font-bold">Preview</h2>
+      <button
+        onClick={onClose}
+        className="px-3 py-1 border rounded hover:bg-gray-100 transition"
+      >
+        Close
+      </button>
     </div>
+
+    {/* Scrollable Content */}
+    <div className="p-4">
+      {formConfig.sections.map((section) => (
+        <div key={section.id} className="mb-4">
+          <h3 className="font-semibold text-lg mb-2">{section.title}</h3>
+          <div className="space-y-2">
+            {section.questions.map((q) => {
+              if (!isVisible(q)) return null;
+              return (
+                <div
+                  key={q.id}
+                  className="flex justify-between border-b py-1 text-sm sm:text-base"
+                >
+                  <span className="font-medium">{q.label}</span>
+                  <span className="text-gray-700">{getDisplayValue(q)}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
   );
 };
 
