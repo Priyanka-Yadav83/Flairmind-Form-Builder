@@ -1,7 +1,7 @@
 import React from 'react';
 
 const RiskMeter: React.FC<{ risk: number; level: string }> = ({ risk, level }) => {
-  
+
   const bg = risk >= 80 ? 'bg-red-600' : risk >= 60 ? 'bg-orange-600' : risk >= 30 ? 'bg-yellow-500' : 'bg-green-600';
   return (
     <div className="mb-4">

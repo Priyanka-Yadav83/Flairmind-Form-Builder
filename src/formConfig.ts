@@ -32,13 +32,13 @@ export const formConfig: FormConfig = {
           riskWeight: 3,
           conditional: { questionId: "q1", answer: "No" }
         },
-          {
-      id: "q1_date",
-      type: "date",
-      label: "When was your last SOC2 audit?",
-      required: false,
-      riskWeight: 2
-    }
+        {
+          id: "q1_date",
+          type: "date",
+          label: "When was your last SOC2 audit?",
+          required: false,
+          riskWeight: 2
+        }
       ]
     },
 

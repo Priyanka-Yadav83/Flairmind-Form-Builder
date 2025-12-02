@@ -7,20 +7,9 @@ import { saveDraft, loadDraft } from "../utils/storage";
 import Section from "./Section";
 import RiskMeter from "./RiskMeter";
 import PreviewModal from "./PreviewModal";
+import FileInput from "./FileInput";
 
 // File input component
-const FileInput: React.FC<{ q: any; formik: any }> = ({ q, formik }) => (
-  <input
-    type="file"
-    name={q.id}
-    accept={q.accept}
-    onChange={(e) => {
-      const file = e.target.files?.[0] ?? null;
-      formik.setFieldValue(q.id, file);
-    }}
-    className="border rounded w-full px-2 py-1 text-xs sm:px-3 sm:py-2 sm:text-sm md:text-base"
-  />
-);
 
 const buildValidationSchema = (config: typeof formConfig) => {
   const shape: any = {};
@@ -34,9 +23,9 @@ const buildValidationSchema = (config: typeof formConfig) => {
         case "number":
           shape[q.id] = q.required
             ? Yup.number()
-                .min(q.min ?? -Infinity, `Min ${q.min}`)
-                .max(q.max ?? Infinity, `Max ${q.max}`)
-                .required("This field is required")
+              .min(q.min ?? -Infinity, `Min ${q.min}`)
+              .max(q.max ?? Infinity, `Max ${q.max}`)
+              .required("This field is required")
             : Yup.number();
           break;
         case "select":
@@ -228,10 +217,10 @@ const DynamicForm: React.FC = () => {
                       )}
 
                       {q.type === "file" && <FileInput q={q} formik={formik} />}
-                      
-                       {formik.touched[q.id] && formik.errors[q.id] && (
-                      <div className="error-text">{String(formik.errors[q.id])}</div>
-                    )}
+
+                      {formik.touched[q.id] && formik.errors[q.id] && (
+                        <div className="error-text">{String(formik.errors[q.id])}</div>
+                      )}
                     </div>
                   )
               )}
